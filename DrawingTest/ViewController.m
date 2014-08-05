@@ -19,7 +19,7 @@
     red = 0.0/255.0;
     green = 0.0/255.0;
     blue = 0.0/255.0;
-    brush = 10.0;
+    brush = 3.0;
     opacity = 1.0;
     
     [super viewDidLoad];
@@ -33,6 +33,7 @@
 }
 
 - (IBAction)reset:(id)sender {
+    self.mainImage.image = nil;
 }
 
 - (IBAction)settings:(id)sender {
