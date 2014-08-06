@@ -66,6 +66,8 @@
     mouseSwiped = YES;
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView:self.view];
+
+
     [_points addObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]];
 
     CGPoint subtract = CGPointMake(currentPoint.x - lastPoint.x, currentPoint.y - lastPoint.y);
@@ -84,8 +86,25 @@
         B = _prevD;
     }
 
-    
-    
+    UIGraphicsBeginImageContext(self.view.frame.size);
+    [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+
+    CGContextMoveToPoint(UIGraphicsGetCurrentContext(), lastPoint.x, lastPoint.y);
+    NSMutableArray *smoothedPoints = [self calculateSmoothLinePoints];
+    for(NSValue *i in smoothedPoints)
+    {
+        CGContextAddLineToPoint(UIGraphicsGetCurrentContext(), [i CGPointValue].x, [i CGPointValue].y);
+    }
+    CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);
+    CGContextSetLineWidth(UIGraphicsGetCurrentContext(), brush);
+    CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), red, green, blue, 1.0);
+    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), kCGBlendModeNormal);
+
+    CGContextStrokePath(UIGraphicsGetCurrentContext());
+    self.tempDrawImage.image = UIGraphicsGetImageFromCurrentImageContext();
+    [self.tempDrawImage setAlpha:opacity];
+    UIGraphicsEndImageContext();
+
     //old style drawing
 //    UIGraphicsBeginImageContext(self.view.frame.size);
 //    [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -100,12 +119,14 @@
 //    self.tempDrawImage.image = UIGraphicsGetImageFromCurrentImageContext();
 //    [self.tempDrawImage setAlpha:opacity];
 //    UIGraphicsEndImageContext();
-    
+
     lastPoint = currentPoint;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    _points = [NSMutableArray array];
+
     if(!mouseSwiped) {
         UIGraphicsBeginImageContext(self.view.frame.size);
         [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -165,6 +186,9 @@
 
             CGPoint finalPoint = midPoint2;
             [smoothedPoints addObject:[NSValue valueWithCGPoint:finalPoint]];
+
+            [_points removeObjectsInRange:NSMakeRange(0, [_points count] - 2)];
+
 
             return smoothedPoints;
         }
