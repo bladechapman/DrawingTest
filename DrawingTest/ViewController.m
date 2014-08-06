@@ -83,6 +83,7 @@
         A = _prevC;
         B = _prevD;
     }
+
     
     
     //old style drawing
@@ -131,34 +132,45 @@
     if([_points count] > 2)
     {
         NSMutableArray *smoothedPoints = [NSMutableArray array];
-    }
-    
-    for (unsigned int i=2; i < [_points count]; ++i) {
-        CGPoint prev2 = [[_points objectAtIndex:i - 2] CGPointValue];
-        CGPoint prev1 = [[_points objectAtIndex:i - 1] CGPointValue];
-        CGPoint cur = [[_points objectAtIndex:i] CGPointValue];
-        
-        CGPoint midPoint1 = CGPointMake((prev1.x + prev2.x)/2, (prev1.y + prev2.y)/2);
-        CGPoint midPoint2 = CGPointMake((cur.x + prev1.x)/2, (cur.y + prev1.y)/2);
-        
-        int segmentDistance = 2;
-        float distance = hypotf(midPoint1.x - midPoint2.x, midPoint1.y - midPoint2.y);
-        int numberOfSegments = MIN(128, MAX(floorf(distance / segmentDistance), 32));
-        
-        float t = 0.0f;
-        float step = 1.0f/numberOfSegments;
-        for (NSUInteger j = 0; j < numberOfSegments; j++) {
-            CGPoint newPoint;
-            
-            //use quad curve equation to add interpolated points
-//            newPoint.pos = ccpAdd(ccpAdd(ccpMult(midPoint1, powf(1 - t, 2)), ccpMult(prev1.pos, 2.0f * (1 - t) * t)), ccpMult(midPoint2, t * t));
 
+        for (unsigned int i=2; i < [_points count]; ++i) {
+            CGPoint prev2 = [[_points objectAtIndex:i - 2] CGPointValue];
+            CGPoint prev1 = [[_points objectAtIndex:i - 1] CGPointValue];
+            CGPoint cur = [[_points objectAtIndex:i] CGPointValue];
+
+            CGPoint midPoint1 = CGPointMake((prev1.x + prev2.x)/2, (prev1.y + prev2.y)/2);
+            CGPoint midPoint2 = CGPointMake((cur.x + prev1.x)/2, (cur.y + prev1.y)/2);
+
+            int segmentDistance = 2;
+            float distance = hypotf(midPoint1.x - midPoint2.x, midPoint1.y - midPoint2.y);
+            int numberOfSegments = MIN(128, MAX(floorf(distance / segmentDistance), 32));
+
+            float t = 0.0f;
+            float step = 1.0f/numberOfSegments;
+            for (NSUInteger j = 0; j < numberOfSegments; j++) {
+                CGPoint newPoint;
+
+                //formula from wiki
+                //(midPoint1 * powf(1 - t, 2)) + ((prev1.pos) * (2.0f * (1 - t) * t)) + (midPoint2 * (t * t))
+                newPoint.x = ((midPoint1.x * powf(1 - t, 2)) + (prev1.x * (2.0f * (1 - t) * t))) + (midPoint2.x * (t * t));
+                newPoint.y = ((midPoint1.y * powf(1 - t, 2)) + (prev1.y * (2.0f * (1 - t) * t))) + (midPoint2.y * (t * t));
+
+                //use quad curve equation to add interpolated points
+                //            newPoint.pos = ccpAdd(ccpAdd(ccpMult(midPoint1, powf(1 - t, 2)), ccpMult(prev1.pos, 2.0f * (1 - t) * t)), ccpMult(midPoint2, t * t));
+
+                [smoothedPoints addObject:[NSValue valueWithCGPoint:newPoint]];
+
+                t += step;
+            }
+
+            CGPoint finalPoint = midPoint2;
+            [smoothedPoints addObject:[NSValue valueWithCGPoint:finalPoint]];
+
+            return smoothedPoints;
         }
-
     }
-    
+
     return nil;
-    
 }
 
 
