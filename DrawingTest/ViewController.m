@@ -35,20 +35,9 @@
 }
 
 #pragma mark - UIButton Actions
-- (IBAction)pencilPressed:(id)sender {
-}
-
-- (IBAction)eraserPressed:(id)sender {
-}
 
 - (IBAction)reset:(id)sender {
     self.mainImage.image = nil;
-}
-
-- (IBAction)settings:(id)sender {
-}
-
-- (IBAction)save:(id)sender {
 }
 
 #pragma mark - Drawing implementation
@@ -113,20 +102,23 @@
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    _points = [NSMutableArray array];
-
     if(!mouseSwiped) {
+        NSLog(@"fdafa");
         UIGraphicsBeginImageContext(self.view.frame.size);
         [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);
-        CGContextSetLineWidth(UIGraphicsGetCurrentContext(), brush);
-        CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), red, green, blue, opacity);
-        CGContextMoveToPoint(UIGraphicsGetCurrentContext(), lastPoint.x, lastPoint.y);
+
+        CGContextAddEllipseInRect(UIGraphicsGetCurrentContext(), CGRectMake([[touches anyObject] locationInView:self.view].x,
+                                                                            [[touches anyObject] locationInView:self.view].y, brush, brush));
+        CGContextDrawPath(UIGraphicsGetCurrentContext(), kCGPathFill);
         CGContextStrokePath(UIGraphicsGetCurrentContext());
+
+
         self.tempDrawImage.image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     }
-    
+
+    _points = [NSMutableArray array];
+
     UIGraphicsBeginImageContext(self.mainImage.frame.size);
     [self.mainImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
     [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];

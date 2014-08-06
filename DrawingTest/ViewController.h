@@ -21,12 +21,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *tempDrawImage;
 @property (weak, nonatomic) IBOutlet UIImageView *mainImage;
 
-- (IBAction)pencilPressed:(id)sender;
-- (IBAction)eraserPressed:(id)sender;
-
 - (IBAction)reset:(id)sender;
-- (IBAction)settings:(id)sender;
-- (IBAction)save:(id)sender;
 
 
 @end
