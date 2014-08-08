@@ -59,43 +59,8 @@
     //new style drawing
     [_points addObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]];
 
-    //Handle thickness
-//    CGPoint subtract = CGPointMake(currentPoint.x - lastPoint.x, currentPoint.y - lastPoint.y);
-//    CGFloat length = hypotf(subtract.x, subtract.y);
-//    subtract.x /= length;
-//    subtract.y /= length;
-//    CGPoint perp = CGPointMake(-subtract.y, subtract.x);
-//    
-//    CGPoint A = CGPointMake(lastPoint.x + perp.x * brush/2, lastPoint.y + perp.y * brush/2);
-//    CGPoint B = CGPointMake(lastPoint.x - perp.x * brush/2, lastPoint.y - perp.y * brush/2);
-//    CGPoint C = CGPointMake(currentPoint.x + perp.x * brush/2, currentPoint.y + perp.y * brush/2);
-//    CGPoint D = CGPointMake(currentPoint.x + perp.x * brush/2, currentPoint.y + perp.y * brush/2);
-//    
-//    if (_connectingLine) {
-//        A = _prevC;
-//        B = _prevD;
-//    }
-
-    UIGraphicsBeginImageContext(self.view.frame.size);
-    [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-
     NSMutableArray *smoothedPoints = [self calculateSmoothLinePoints];
-    CGContextMoveToPoint(UIGraphicsGetCurrentContext(), [[smoothedPoints objectAtIndex:0] CGPointValue].x, [[smoothedPoints objectAtIndex:0] CGPointValue].y);
-    for (int i = 1; i < [smoothedPoints count]; i++) {
-        CGPoint addPoint = [[smoothedPoints objectAtIndex:i] CGPointValue];
-        CGContextAddLineToPoint(UIGraphicsGetCurrentContext(), addPoint.x, addPoint.y);
-    }
-    CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);
-    CGContextSetLineWidth(UIGraphicsGetCurrentContext(), brush);
-    CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), red, green, blue, 1.0);
-    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), kCGBlendModeNormal);
-
-    CGContextStrokePath(UIGraphicsGetCurrentContext());
-    self.tempDrawImage.image = UIGraphicsGetImageFromCurrentImageContext();
-    [self.tempDrawImage setAlpha:opacity];
-    UIGraphicsEndImageContext();
-
-
+    [self renderLinesPointsArray:smoothedPoints];
 
     lastPoint = currentPoint;
 }
@@ -103,7 +68,6 @@
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if(!mouseSwiped) {
-        NSLog(@"fdafa");
         UIGraphicsBeginImageContext(self.view.frame.size);
         [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 
@@ -121,11 +85,40 @@
 
     UIGraphicsBeginImageContext(self.mainImage.frame.size);
     [self.mainImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
-    [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
+    [self.tempDrawImage.image drawInRect:CGRectMake(self.tempDrawImage.center.x, self.tempDrawImage.center.y, self.view.frame.size.width/2, self.view.frame.size.height/2) blendMode:kCGBlendModeNormal alpha:1.0];
     self.mainImage.image = UIGraphicsGetImageFromCurrentImageContext();
     self.tempDrawImage.image = nil;
     UIGraphicsEndImageContext();
     
+}
+
+
+#pragma mark - complex drawing
+
+- (void)renderLinesPointsArray:(NSMutableArray *)points
+{
+    UIGraphicsBeginImageContext(CGSizeMake(self.view.frame.size.width/2, self.view.frame.size.height/2));
+    self.tempDrawImage.frame = CGRectMake(0, 0, self.view.frame.size.width/2, self.view.frame.size.height/2);
+    [self.tempDrawImage.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width/2, self.view.frame.size.height/2)];
+
+    self.tempDrawImage.center = [[points objectAtIndex:0] CGPointValue];
+
+    CGContextMoveToPoint(UIGraphicsGetCurrentContext(), [[points objectAtIndex:0] CGPointValue].x, [[points objectAtIndex:0] CGPointValue].y);
+
+    for (int i = 1; i < [points count]; i++) {
+        CGPoint addPoint = [[points objectAtIndex:i] CGPointValue];
+        CGContextAddLineToPoint(UIGraphicsGetCurrentContext(), addPoint.x, addPoint.y);
+    }
+
+    CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);
+    CGContextSetLineWidth(UIGraphicsGetCurrentContext(), brush);
+    CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), red, green, blue, 1.0);
+    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), kCGBlendModeNormal);
+
+    CGContextStrokePath(UIGraphicsGetCurrentContext());
+    self.tempDrawImage.image = UIGraphicsGetImageFromCurrentImageContext();
+    [self.tempDrawImage setAlpha:opacity];
+    UIGraphicsEndImageContext();
 }
 
 - (NSMutableArray *)calculateSmoothLinePoints

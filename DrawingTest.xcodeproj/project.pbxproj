@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09BF09BA1994AF4B00C1D731 /* RRFPSBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 09BF09B91994AF4B00C1D731 /* RRFPSBar.m */; };
 		3818847E197B11C50052F902 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3818847D197B11C40052F902 /* Foundation.framework */; };
 		38188480197B11C50052F902 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3818847F197B11C50052F902 /* CoreGraphics.framework */; };
 		38188482197B11C50052F902 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38188481197B11C50052F902 /* UIKit.framework */; };
@@ -57,6 +58,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		09BF09B81994AF4B00C1D731 /* RRFPSBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRFPSBar.h; sourceTree = "<group>"; };
+		09BF09B91994AF4B00C1D731 /* RRFPSBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRFPSBar.m; sourceTree = "<group>"; };
 		3818847A197B11C40052F902 /* DrawingTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrawingTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3818847D197B11C40052F902 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3818847F197B11C50052F902 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -164,6 +167,8 @@
 				38188492197B11C50052F902 /* Main_iPad.storyboard */,
 				38188495197B11C50052F902 /* ViewController.h */,
 				38188496197B11C50052F902 /* ViewController.m */,
+				09BF09B81994AF4B00C1D731 /* RRFPSBar.h */,
+				09BF09B91994AF4B00C1D731 /* RRFPSBar.m */,
 				381884B5197B14200052F902 /* Graphics */,
 				38188498197B11C50052F902 /* Images.xcassets */,
 				38188484197B11C50052F902 /* Supporting Files */,
@@ -352,6 +357,7 @@
 				38188497197B11C50052F902 /* ViewController.m in Sources */,
 				3818848E197B11C50052F902 /* AppDelegate.m in Sources */,
 				3818848A197B11C50052F902 /* main.m in Sources */,
+				09BF09BA1994AF4B00C1D731 /* RRFPSBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,7 +495,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DrawingTest/DrawingTest-Prefix.pch";
 				INFOPLIST_FILE = "DrawingTest/DrawingTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -502,7 +510,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DrawingTest/DrawingTest-Prefix.pch";
 				INFOPLIST_FILE = "DrawingTest/DrawingTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -566,6 +576,7 @@
 				381884B1197B11C50052F902 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		381884B2197B11C50052F902 /* Build configuration list for PBXNativeTarget "DrawingTestTests" */ = {
 			isa = XCConfigurationList;
@@ -574,6 +585,7 @@
 				381884B4197B11C50052F902 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
